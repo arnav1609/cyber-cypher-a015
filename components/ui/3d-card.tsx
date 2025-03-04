@@ -9,12 +9,10 @@ import React, {
 } from "react";
 import { cn } from "@/lib/utils"; // Ensure your utility function is imported
 
-// Create a context to share the mouse-enter state between components.
 const MouseEnterContext = createContext<
   [boolean, React.Dispatch<React.SetStateAction<boolean>>] | undefined
 >(undefined);
 
-// CardContainer: wraps the card, sets up perspective, and handles the 3D rotation effect.
 export const CardContainer: React.FC<{
   children?: React.ReactNode;
   className?: string;
@@ -46,7 +44,10 @@ export const CardContainer: React.FC<{
   return (
     <MouseEnterContext.Provider value={[isMouseEntered, setIsMouseEntered]}>
       <div
-        className={cn("py-20 flex items-center justify-center", containerClassName)}
+        className={cn(
+          "flex items-center justify-center py-10 md:py-20 w-full h-screen", // Responsive height & padding
+          containerClassName
+        )}
         style={{ perspective: "1000px" }}
       >
         <div
@@ -54,7 +55,10 @@ export const CardContainer: React.FC<{
           onMouseEnter={handleMouseEnter}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className={cn("relative transition-all duration-200 ease-linear", className)}
+          className={cn(
+            "relative transition-all duration-200 ease-linear w-full max-w-md md:max-w-lg lg:max-w-xl",
+            className
+          )}
           style={{ transformStyle: "preserve-3d" }}
         >
           {children}
@@ -64,7 +68,6 @@ export const CardContainer: React.FC<{
   );
 };
 
-// CardBody: container for card content ensuring that its children inherit 3D transforms.
 export const CardBody: React.FC<{
   children: React.ReactNode;
   className?: string;
@@ -72,7 +75,8 @@ export const CardBody: React.FC<{
   return (
     <div
       className={cn(
-        "h-96 w-96 [transform-style:preserve-3d] [&>*]:[transform-style:preserve-3d]",
+        "h-auto w-full max-w-md md:max-w-lg lg:max-w-xl", // Responsive width & height
+        "[transform-style:preserve-3d] [&>*]:[transform-style:preserve-3d]",
         className
       )}
     >
@@ -81,12 +85,9 @@ export const CardBody: React.FC<{
   );
 };
 
-// Helper to format numeric values with units if needed.
 const getUnitValue = (value: number | string, unit = "px") =>
   typeof value === "number" ? `${value}${unit}` : value;
 
-// CardItem: each child element that will be animated individually.
-// It uses the mouse-enter context to decide whether to apply its transform.
 export const CardItem: React.FC<{
   as?: React.ElementType;
   children: React.ReactNode;
@@ -135,13 +136,19 @@ export const CardItem: React.FC<{
   }, [isMouseEntered, translateX, translateY, translateZ, rotateX, rotateY, rotateZ]);
 
   return (
-    <Tag ref={ref} className={cn("w-fit transition duration-200 ease-linear", className)} {...rest}>
+    <Tag
+      ref={ref}
+      className={cn(
+        "w-full max-w-md md:max-w-lg lg:max-w-xl transition duration-200 ease-linear",
+        className
+      )}
+      {...rest}
+    >
       {children}
     </Tag>
   );
 };
 
-// Optional hook if you need to use the mouse-enter state elsewhere.
 export const useMouseEnter = () => {
   const context = useContext(MouseEnterContext);
   if (context === undefined) {
