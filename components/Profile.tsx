@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { db, collection, getDocs } from "../source/firebase";
 import ProfileDropdown from "./ProfileDropDown";
 import { motion } from "framer-motion";
-import { Avatar } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 
 export { db };
@@ -12,7 +11,6 @@ export { db };
 interface Mentee {
   id: string;
   name: string;
-  profilePic: string;
   progress: number;
   score: number;
   mentors: string[];
@@ -48,7 +46,6 @@ const Profile = () => {
         {mentees.map((mentee) => (
           <Card key={mentee.id} className="bg-white p-6 rounded-lg shadow-xl">
             <CardContent className="flex flex-col items-center text-center">
-              <Avatar className="w-24 h-24 rounded-full border-4 border-indigo-500" src={mentee.profilePic} />
               <h2 className="text-xl font-semibold mt-4 text-indigo-800">{mentee.name}</h2>
               <p className="text-sm text-gray-600">Mentors: {mentee.mentors.join(", ")}</p>
 
@@ -93,4 +90,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
